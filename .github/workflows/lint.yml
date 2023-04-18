@@ -14,15 +14,14 @@ jobs:
       
       - name: Check and reformat files
         run: |
-          # Find all files in the repository
+          # Find all files
           FILES=$(find . -type f)
-
           # Reformat each file
           for file in $FILES
           do
             editorconfig-cli $file
           done
-
+          
           # Commit and push changes
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
