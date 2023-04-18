@@ -34,5 +34,7 @@ jobs:
       - name: Commit changes
         if: ${{ steps.check_changes.outputs.changes != '' }}
         run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"  
           git commit -m "Format code with Prettier"
           git push origin ${{ github.head_ref }}
