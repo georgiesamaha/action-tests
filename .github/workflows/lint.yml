@@ -9,13 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y editorconfig
-          editorconfig --version
-
+      - uses: editorconfig-checker/action-editorconfig-checker@main
+      - run: editorconfig-checker
+      
       - name: Check and reformat files
         run: |
           # Find all files in the repository
