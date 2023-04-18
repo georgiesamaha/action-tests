@@ -1,0 +1,40 @@
+name: Check directory matches template structure
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check_files_and_directories:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Check for directories
+        run: |
+          if [ ! -d "config" ]; then
+            echo "::error::Directory 'config/' not found"
+            exit 1
+          fi
+          if [ ! -d "modules" ]; then
+            echo "::error::Directory 'modules/' not found"
+            exit 1
+          fi
+
+      - name: Check for files
+        run: |
+          if [ ! -f ".editorconfig" ]; then
+            echo "::error::File '.editorconfig' not found"
+            exit 1
+          fi
+          if [ ! -f "main.nf" ]; then
+            echo "::error::File 'main.nf' not found"
+            exit 1
+          fi
+          if [ ! -f "nextflow.config" ]; then
+            echo "::error::File 'nextflow.config' not found"
+            exit 1
+          fi
+          if [ ! -f "CITATION.cff" ]; then
+            echo "::error::File 'CITATION.cff' not found"
+            exit 1
+          fi
