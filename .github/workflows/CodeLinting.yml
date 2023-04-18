@@ -1,23 +1,34 @@
 name: make pretty
-# This action works with pull requests and pushes
 on:
-  pull_request:
   push:
     branches:
       - main
 
 jobs:
-  prettier:
+  reformat_code:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v2
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y editorconfig
+          editorconfig --version
 
-      - name: Install Prettier
-        run: npm install -g prettier @prettier/plugin-php
+      - name: Reformat .nf files
+        run: |
+          # Find all .nf files 
+          NFFILES=$(find . \( -name '*.nf' -o -path './modules/*.nf' \) -type f)
 
-      - name: Run Prettier --check
-        run: prettier --check ${GITHUB_WORKSPACE}
-  
+          # Reformat each .nf file
+          for file in $NFFILES
+          do
+            editorconfig-cli $file
+          done
+
+          # Commit and push changes
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -a -m "Reformat .nf files with editorconfig"
+          git push
