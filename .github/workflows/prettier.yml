@@ -33,7 +33,7 @@ jobs:
           git add -A
       
       - name: Commit changes
-        if: 'git status --porcelain'
+        if: "git status --porcelain"
         run: |
           git commit -m "Reformat code with Prettier"
           git push origin ${{ github.head_ref }}
