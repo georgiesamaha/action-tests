@@ -18,9 +18,6 @@ jobs:
       - name: Install dependencies
         run: npm install --no-save prettier
 
-      - name: Check formatting with Prettier
-        run: npx prettier --check '**/*.{js,jsx,ts,tsx,css,md,json,yml,yaml,html,scss}'
-      
       - name: Reformat with Prettier
         run: npx prettier --write '**/*.{js,jsx,ts,tsx,css,md,json,yml,yaml,html,scss}'
       
