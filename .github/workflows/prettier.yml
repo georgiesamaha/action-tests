@@ -19,7 +19,7 @@ jobs:
         run: npm install --no-save prettier
 
       - name: Reformat with Prettier
-        run: npx prettier --write '**/*.{js,jsx,ts,tsx,css,md,json,yml,yaml,html,scss}'
+        run: npx prettier --write .
 
       - name: Authenticate with GitHub
         uses: actions/checkout@v2
@@ -33,7 +33,7 @@ jobs:
           git add -A
       
       - name: Commit changes
-          if: `git status --porcelain`
-          run: |
-            git commit -m "Format code with Prettier"
-            git push origin ${{ github.head_ref }}
+        if: `git status --porcelain`
+        run: |
+          git commit -m "Reformat code with Prettier"
+          git push origin ${{ github.head_ref }}
