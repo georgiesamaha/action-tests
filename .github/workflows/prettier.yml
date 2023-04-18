@@ -26,9 +26,14 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
         
-      - name: Commit changes
+      - name: Stage changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git commit -a -m "Format code with Prettier"
-          git push
+          git add -A
+      
+      - name: Commit changes
+        if: `git status --porcelain`
+        run: |
+          git commit -m "Format code with Prettier"
+          git push origin ${{ github.head_ref }}
