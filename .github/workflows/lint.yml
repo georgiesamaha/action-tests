@@ -9,17 +9,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: Install dependencies
-      - run: |
-          npm install -g @htmlacademy/editorconfig-cli
-          editorconfig --version
+      
+      - name: Install editorconfig-cli
+        run: npm install -g @htmlacademy/editorconfig-cli
       
       - name: Check and reformat files
         run: |
+          # Find all files in the repository
+          FILES=$(find . -type f)
           # Reformat each file
-          editorconfig-cli .
-
+          for file in $FILES
+          do
+            editorconfig-cli $file
+          done
           # Commit and push changes
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
