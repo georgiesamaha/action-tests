@@ -16,13 +16,19 @@ jobs:
           sudo apt-get install -y editorconfig
           editorconfig --version
 
-      - name: Reformat .nf files
+      - name: Check and reformat files
         run: |
-          # Find all .nf files 
-          NFFILES=$(find . \( -name '*.nf' -o -path './modules/*.nf' \) -type f)
+          # Find all files in the repository
+          FILES=$(find . -type f)
 
-          # Reformat each .nf file
-          for file in $NFFILES
+          # Check formatting for each file
+          for file in $FILES
+          do
+            editorconfig-cli check $file
+          done
+
+          # Reformat each file
+          for file in $FILES
           do
             editorconfig-cli $file
           done
@@ -30,5 +36,5 @@ jobs:
           # Commit and push changes
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git commit -a -m "Reformat .nf files with editorconfig"
+          git commit -a -m "Reformat files with editorconfig"
           git push
