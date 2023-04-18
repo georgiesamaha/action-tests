@@ -24,7 +24,7 @@ jobs:
       - name: Authenticate with GitHub
         uses: actions/checkout@v2
         with:
-          token: ${{ secrets.ACTION_TEST }}
+          token: ${{ secrets.GITHUB_TOKEN }}
         
       - name: Commit changes
         run: |
