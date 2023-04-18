@@ -1,4 +1,4 @@
-name: lint code with Prettier
+name: Lint code with Prettier
 on:
   push:
     branches: [ main ]
@@ -18,5 +18,24 @@ jobs:
       - name: Install dependencies
         run: npm install --no-save prettier
 
-      - name: Reformat with Prettier
+      - name: Check formatting with Prettier
         run: npx prettier --check ${GITHUB_WORKSPACE}
+        
+      - name: Reformat with Prettier
+        run: npx prettier --write ${GITHUB_WORKSPACE}      
+
+      - name: Stage changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git status --porcelain | grep '^ M' | sed 's/^ M //' | xargs git add
+      
+      - name: Check if changes exist
+        id: check_changes
+        run: echo ::set-output name=changes::$(git status --porcelain)
+
+      - name: Commit changes
+        if: ${{ steps.check_changes.outputs.changes != '' }}
+        run: |
+          git commit -m "Format code with Prettier"
+          git push origin ${{ github.head_ref }}
