@@ -27,12 +27,6 @@ jobs:
           git config --local user.name "GitHub Action"
           git status --porcelain | grep '^ M' | sed 's/^ M //' | xargs git add
       
-      - name: Check if changes exist
-        id: check_changes
-        run: |
-          echo ::set-output name=changes::$(git status --porcelain)
-          echo "${{ steps.check_changes.outputs.changes }}"
-
       - name: Authenticate with GitHub
         uses: actions/checkout@v2
         with:
@@ -44,4 +38,4 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"  
           git commit -m "Format code with Prettier"
-          git push origin ${{ github.head_ref }}
+          git push --quiet origin ${{ github.head_ref }}
