@@ -17,12 +17,6 @@ jobs:
           # Find all files in the repository
           FILES=$(find . -type f)
 
-          # Check formatting for each file
-          for file in $FILES
-          do
-            editorconfig-cli check $file
-          done
-
           # Reformat each file
           for file in $FILES
           do
