@@ -19,7 +19,7 @@ jobs:
         run: npm install --no-save prettier
 
       - name: Reformat with Prettier
-        run: prettier --write ${GITHUB_WORKSPACE}
+        run: npx prettier --write ${GITHUB_WORKSPACE}
 
       - name: Authenticate with GitHub
         uses: actions/checkout@v2
