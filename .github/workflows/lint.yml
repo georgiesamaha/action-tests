@@ -5,25 +5,20 @@ on:
       - main
 
 jobs:
-  reformat_code:
+  prettier:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       
-      - name: Install editorconfig-cli
-        run: npm install -g @htmlacademy/editorconfig-cli
-      
-      - name: Check and reformat files
+      - name: Install dependencies
+        run: npm install --no-save prettier
+        
+      - name: Check and format files
+        run: npx prettier --check '**/*.{js,jsx,ts,tsx,css,md,json,yml,yaml,html,scss}' && npx prettier --write '**/*.{js,jsx,ts,tsx,css,md,json,yml,yaml,html,scss}'
+        
+      - name: Commit changes
         run: |
-          # Find all files in the repository
-          FILES=$(find . -type f)
-          # Reformat each file
-          for file in $FILES
-          do
-            editorconfig-cli $file
-          done
-          # Commit and push changes
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git commit -a -m "Reformat files with editorconfig"
+          git commit -a -m "Format code with Prettier"
           git push
