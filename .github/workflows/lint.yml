@@ -31,6 +31,11 @@ jobs:
         id: check_changes
         run: echo ::set-output name=changes::$(git status --porcelain)
 
+      - name: Authenticate with GitHub
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.ACTION_TEST }}
+
       - name: Commit changes
         if: ${{ steps.check_changes.outputs.changes != '' }}
         run: |
