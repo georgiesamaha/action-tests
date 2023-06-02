@@ -14,6 +14,11 @@ jobs:
       - name: Check Out Repository
         uses: actions/checkout@v3
       
+      - name: Configure Git
+        run: |
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git config user.name "${{ github.actor }}"
+
       - name: Download Test Repository
         run: |
           curl -L -o testTemplate.tar.gz https://github.com/georgiesamaha/testTemplate/archive/refs/heads/main.tar.gz
