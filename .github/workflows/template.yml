@@ -61,8 +61,17 @@ jobs:
             author_name="$(echo $INFO | jq -r .repository.owner.name)"
           popd
 
+          # Debug information
+          ls -la /tmp/testCookie
+          ls -la .
+
           # Move generated content to root directory of repo
-          mv /tmp/$REPO_NAME/* .
+          mv /tmp/testCookie/* .
+
+          # Debug information
+          ls -la .
+          ls -la .github
+
           # Rename .github to github to escape GitHub action permission issues
           mv .github github
 
