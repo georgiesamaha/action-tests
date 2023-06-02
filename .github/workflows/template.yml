@@ -1,0 +1,30 @@
+name: Clone Repository from Template
+
+on:
+  repository_dispatch:
+    types:
+      - template
+
+jobs:
+  clone_repository:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Clone Template Repository
+        run: git clone https://github.com/Sydney-Informatics-Hub/Nextflow_DSL2_template
+
+      - name: Move Template to Repository Root
+        run: |
+          mv Nextflow_DSL2_template/* .
+          mv Nextflow_DSL2_template/.github .
+          rmdir Nextflow_DSL2_template
+
+      - name: Commit Changes
+        run: |
+          git config user.name "Your Name"
+          git config user.email "your-email@example.com"
+          git add .
+          git commit -m "Clone template repository"
