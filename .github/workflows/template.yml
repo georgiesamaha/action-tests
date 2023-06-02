@@ -1,17 +1,27 @@
-name: Clone Separate Repository
+name: Clone and Replace Repository
 
 on:
   create:
     - repository
 
 jobs:
-  clone-repo:
+  clone-and-replace:
     runs-on: ubuntu-latest
 
     steps:
       - name: Check Out Repository
         uses: actions/checkout@v2
       
-      - name: Clone Separate Repository
+      - name: Download Test Repository
         run: |
-          git clone https://github.com/georgiesamaha/testTemplate.git
+          curl -L -o testTemplate.tar.gz https://github.com/georgiesamaha/testTemplate/archive/refs/heads/main.tar.gz
+          tar -zxvf testTemplate.tar.gz
+          rm -f testTemplate.tar.gz
+          mv testTemplate-main/* .
+          rm -rf testTemplate-main
+      
+      - name: Commit and Push Changes
+        run: |
+          git add .
+          git commit -m "Replace repository contents with test repository"
+          git push --force
