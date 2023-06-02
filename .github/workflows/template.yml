@@ -1,16 +1,18 @@
 name: Clone and Replace Repository
-
 on:
-  create:
-    - repository
+  push:
+  workflow_dispatch:
 
 jobs:
-  clone-and-replace:
+  setup-repo:
+    if: ${{ github.repository != 'georgiesamaha/testTemplate' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Check Out Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       
       - name: Download Test Repository
         run: |
@@ -20,8 +22,13 @@ jobs:
           mv testTemplate-main/* .
           rm -rf testTemplate-main
       
-      - name: Commit and Push Changes
+      - name: Force push to main
         run: |
           git add .
           git commit -m "Replace repository contents with test repository"
           git push --force
+
+      - name: Create new TEMPLATE branch
+        run: |
+          git branch TEMPLATE
+          git push origin TEMPLATE --force
