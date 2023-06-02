@@ -32,8 +32,3 @@ jobs:
           git add .
           git commit -m "Replace repository contents with test repository"
           git push --force
-
-      - name: Create new TEMPLATE branch
-        run: |
-          git branch TEMPLATE
-          git push origin TEMPLATE --force
