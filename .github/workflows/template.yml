@@ -1,37 +1,78 @@
-name: Clone and Replace Repository
+name: Execute template to populate repository
+
 on:
-  repository_dispatch:
-    types:
-      - create-template-repo
+  push:
+  workflow_dispatch:
+
 jobs:
   setup-repo:
     if: ${{ github.repository != 'georgiesamaha/action-tests' }}
     runs-on: ubuntu-latest
+
     permissions:
       contents: write
 
     steps:
-      - name: Check Out Repository
-        uses: actions/checkout@v3
-      
-      - name: Configure Git
-        run: |
-          git config user.email "${{ github.actor }}@users.noreply.github.com"
-          git config user.name "${{ github.actor }}"
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
 
-      - name: Download Test Repository
+      - name: Install cookiecutter
+        run: pip3 install cookiecutter
+
+      - uses: actions/github-script@v4
+        id: fetch-repo-and-user-details
+        with:
+          script: |
+            const query = `query($owner:String!, $name:String!) {
+              repository(owner:$owner, name:$name) {
+                name
+                description
+                owner {
+                  login
+                  ... on User {
+                    name
+                  }
+                  ... on Organization {
+                    name
+                  }
+                }
+              }
+            }`;
+            const variables = {
+              owner: context.repo.owner,
+              name: context.repo.repo
+            }
+            const result = await github.graphql(query, variables)
+            return result
+
+      - name: Rebuild contents using cookiecutter
+        env:
+          INFO: ${{ steps.fetch-repo-and-user-details.outputs.result }}
         run: |
-          curl -L -o testTemplate.tar.gz https://github.com/georgiesamaha/testTemplate/archive/refs/heads/main.tar.gz
-          tar -zxvf testTemplate.tar.gz
-          rm -f testTemplate.tar.gz
-          mv testTemplate-main/* .
-          rm -rf testTemplate-main
-          rm -rf cookiecutter.json 
-          rm -rf modules
-          rm -rf actions
+          export REPO_NAME=$(echo $INFO | jq -r '.repository.name')
+          # Run cookiecutter
+          pushd /tmp
+          cookiecutter gh:georgiesamaha/testTemplate --no-input \
+            app_name=$REPO_NAME \
+            description="$(echo $INFO | jq -r .repository.description)" \
+            github_username="$(echo $INFO | jq -r .repository.owner.login)" \
+            author_name="$(echo $INFO | jq -r .repository.owner.name)"
+          popd
+
+          # Move generated content to root directory of repo
+          mv /tmp/$REPO_NAME/* .
+          # Rename .github to github to escape GitHub action permission issues
+          mv .github github
 
       - name: Force push to main
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Initial library structure"
+          push_options: "--force"
+
+      - name: Create new TEMPLATE branch
         run: |
-          git add .
-          git commit -m "Replace repository contents with test repository"
-          git push --force
+          git branch TEMPLATE
+          git push origin TEMPLATE --force
