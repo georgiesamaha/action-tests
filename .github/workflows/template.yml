@@ -47,7 +47,7 @@ jobs:
             const result = await github.graphql(query, variables)
             return result
 
-      - name: Rebuild contents using cookiecutter
+      - name: Build out template 
         env:
           INFO: ${{ steps.fetch-repo-and-user-details.outputs.result }}
         run: |
@@ -66,13 +66,8 @@ jobs:
           # Move generated content to root directory of repo
           mv /tmp/$REPO_NAME/* .
 
-      - name: Force push to main
+      - name: Force push changes to main
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "Initial library structure"
+          commit_message: "Initial template structure"
           push_options: "--force"
-
-      - name: Create new TEMPLATE branch
-        run: |
-          git branch TEMPLATE
-          git push origin TEMPLATE --force
