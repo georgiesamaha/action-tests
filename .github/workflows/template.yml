@@ -26,6 +26,7 @@ jobs:
           rm -f testTemplate.tar.gz
           mv testTemplate-main/* .
           rm -rf testTemplate-main
+          echo "proof this works" > README.md
       
       - name: Force push to main
         run: |
