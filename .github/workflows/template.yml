@@ -1,8 +1,8 @@
 name: Clone and Replace Repository
 on:
-  push:
-  workflow_dispatch:
-
+  repository_dispatch:
+    types:
+      - create-template-repo
 jobs:
   setup-repo:
     if: ${{ github.repository != 'georgiesamaha/testTemplate' }}
