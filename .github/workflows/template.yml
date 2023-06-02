@@ -6,7 +6,7 @@ on:
 
 jobs:
   setup-repo:
-    if: ${{ github.repository != 'georgiesamaha/action-tests' }}
+    if: ${{ github.repository != 'georgiesamaha/testTemplate' }}
     runs-on: ubuntu-latest
 
     permissions:
@@ -60,18 +60,11 @@ jobs:
             github_username="$(echo $INFO | jq -r .repository.owner.login)" \
             author_name="$(echo $INFO | jq -r .repository.owner.name)"
           popd
-
-          # Debug information
-          ls -la /tmp/testCookie
-          ls -la .
-
+          # Delete the .github directory, it has served its purpose
+          rm -rf .github/
+          shopt -s dotglob
           # Move generated content to root directory of repo
-          mv /tmp/testCookie/* .
-
-          # Debug information
-          ls -la .
-          ls -la .github
-
+          mv /tmp/$REPO_NAME/* .
           # Rename .github to github to escape GitHub action permission issues
           mv .github github
 
