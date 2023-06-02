@@ -1,4 +1,4 @@
-name: Clone Repository from Template
+name: Clone Repository from Custom Template
 
 on:
   repository_dispatch:
@@ -10,15 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Clone Template Repository
+      - name: Clone Custom Template Repository
         run: |
           git clone https://github.com/georgiesamaha/testTemplate .
           rm -rf .git
           git init
           git add .
-          git commit -m "Clone template repository"
+          git commit -m "Clone custom template repository"
           git remote add origin "https://github.com/$GITHUB_REPOSITORY"
           git push -u origin main
