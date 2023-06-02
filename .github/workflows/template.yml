@@ -14,8 +14,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Clone Template Repository
-        run: git clone https://github.com/Sydney-Informatics-Hub/Nextflow_DSL2_template
-
+        run: git clone https://github.com/georgiesamaha/test-template.git
       - name: Move Template to Repository Root
         run: |
           mv Nextflow_DSL2_template/* .
