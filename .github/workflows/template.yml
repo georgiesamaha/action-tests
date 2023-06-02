@@ -5,7 +5,7 @@ on:
       - create-template-repo
 jobs:
   setup-repo:
-    if: ${{ github.repository != 'georgiesamaha/testTemplate' }}
+    if: ${{ github.repository != 'georgiesamaha/action-tests' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -26,7 +26,6 @@ jobs:
           rm -f testTemplate.tar.gz
           mv testTemplate-main/* .
           rm -rf testTemplate-main
-          echo "proof this works" > README.md
           rm -rf cookiecutter.json 
           rm -rf modules
           rm -rf actions
