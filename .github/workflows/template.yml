@@ -27,7 +27,10 @@ jobs:
           mv testTemplate-main/* .
           rm -rf testTemplate-main
           echo "proof this works" > README.md
-      
+          rm -rf cookiecutter.json 
+          rm -rf modules
+          rm -rf actions
+
       - name: Force push to main
         run: |
           git add .
